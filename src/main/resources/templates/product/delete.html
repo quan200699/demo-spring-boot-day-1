@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h1>Xóa sản phẩm</h1>
+<a th:href="@{/products/list}">Danh sách sản phẩm</a>
+<form method="post" th:action="@{/products/delete}" th:object="${product}">
+  <table>
+    <tr>
+      <td><input th:field="*{id}" type="hidden"></td>
+    </tr>
+    <tr>
+      <td>Tên sản phẩm:</td>
+      <td><input th:field="*{name}" type="text" disabled></td>
+    </tr>
+    <tr>
+      <td>Giá sản phẩm:</td>
+      <td><input th:field="*{price}" type="text" disabled></td>
+    </tr>
+    <tr>
+      <td>Ảnh sản phẩm:</td>
+      <td><input th:field="*{imgUrl}" type="text" disabled></td>
+    </tr>
+    <tr>
+      <td>Thông tin sản phẩm:</td>
+      <td><input th:field="*{description}" type="text" disabled></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <button>Xóa thông tin</button>
+      </td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>
