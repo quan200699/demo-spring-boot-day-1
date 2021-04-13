@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Tạo mới danh mục</h1>
+<a th:href="@{/categories/list}">Danh sách danh mục</a>
+<form method="post" th:action="@{/categories/create}" th:object="${category}">
+    <table>
+        <tr>
+            <td>Tên danh mục:</td>
+            <td><input th:field="*{name}" type="text"></td>
+        </tr>
+        <td></td>
+        <td>
+            <button>Tạo mới</button>
+        </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

@@ -19,4 +19,7 @@ public class Product {
     private String description;
 
     private String imgUrl;
+
+    @ManyToOne
+    private Category category;
 }

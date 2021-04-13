@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Danh sách danh mục</h1>
+<a th:href="@{/categories/create}">Tạo mới danh mục</a>
+<table>
+    <tr>
+        <th>Tên danh mục</th>
+        <th>Chỉnh sửa</th>
+        <th>Xóa</th>
+    </tr>
+    <th:block th:each="category: ${categories}">
+        <tr>
+            <td th:text="${category.name}"></td>
+            <td><a th:href="@{/categories/edit/__${category.id}__ }">Edit</a></td>
+            <td><a th:href="@{/categories/delete/__${category.id}__ }">Delete</a></td>
+        </tr>
+    </th:block>
+</table>
+</body>
+</html>
