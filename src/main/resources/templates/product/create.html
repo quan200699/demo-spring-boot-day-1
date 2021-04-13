@@ -7,7 +7,7 @@
 <body>
 <h1>Tạo mới sản phẩm</h1>
 <a th:href="@{/products/list}">Danh sách sản phẩm</a>
-<form th:object="${product}" th:action="@{/products/create}" method="post">
+<form th:object="${product}" th:action="@{/products/create}" method="post" enctype="multipart/form-data">
   <table>
     <tr>
       <td>Tên sản phẩm:</td>
@@ -19,7 +19,7 @@
     </tr>
     <tr>
       <td>Ảnh sản phẩm:</td>
-      <td><input type="text" th:field="*{imgUrl}"></td>
+      <td><input type="file" th:field="*{image}"></td>
     </tr>
     <tr>
       <td>Thông tin sản phẩm:</td>
