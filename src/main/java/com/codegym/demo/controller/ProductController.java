@@ -65,7 +65,9 @@ public class ProductController {
         ModelAndView modelAndView;
         if (productOptional.isPresent()) {
             modelAndView = new ModelAndView("/product/edit");
-            modelAndView.addObject("product", productOptional.get());
+            Product product = productOptional.get();
+            ProductForm productForm = new ProductForm(product.getId(), product.getName(), product.getPrice(), product.getDescription(), null);
+            modelAndView.addObject("product", productForm);
         } else {
             modelAndView = new ModelAndView("/error-404");
         }
@@ -73,9 +75,24 @@ public class ProductController {
     }
 
     @PostMapping("/edit")
-    public ModelAndView editProduct(@ModelAttribute Product product) {
+    public ModelAndView editProduct(@ModelAttribute ProductForm productForm) {
+        Product product = new Product();
+        MultipartFile multipartFile = productForm.getImage();
+        String fileName = multipartFile.getOriginalFilename();
+        try {
+            FileCopyUtils.copy(productForm.getImage().getBytes(), new File(this.fileUpload + fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        product.setId(productForm.getId());
+        product.setName(productForm.getName());
+        product.setPrice(productForm.getPrice());
+        product.setDescription(productForm.getDescription());
+        product.setImgUrl(fileName);
         productService.save(product);
-        return new ModelAndView("/product/edit");
+        ModelAndView modelAndView = new ModelAndView("/product/edit");
+        modelAndView.addObject("product", new ProductForm());
+        return modelAndView;
     }
 
     @GetMapping("/delete/{id}")

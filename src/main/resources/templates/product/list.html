@@ -20,7 +20,9 @@
         <tr>
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
-            <td th:text="${product.imgUrl}"></td>
+            <td>
+                <img th:src="@{'../' + ${product.imgUrl}}" width="50" height="50">
+            </td>
             <td th:text="${product.description}"></td>
             <td><a th:href="@{/products/edit/__${product.id}__ }">Edit</a></td>
             <td><a th:href="@{/products/delete/__${product.id}__ }">Delete</a></td>

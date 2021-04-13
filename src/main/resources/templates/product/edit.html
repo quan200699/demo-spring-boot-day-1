@@ -7,7 +7,7 @@
 <body>
 <h1>Cập nhật sản phẩm</h1>
 <a th:href="@{/products/list}">Danh sách sản phẩm</a>
-<form method="post" th:action="@{/products/edit}" th:object="${product}">
+<form method="post" th:action="@{/products/edit}" th:object="${product}" enctype="multipart/form-data">
     <table>
         <tr>
             <td><input th:field="*{id}" type="hidden"></td>
@@ -22,7 +22,7 @@
         </tr>
         <tr>
             <td>Ảnh sản phẩm:</td>
-            <td><input th:field="*{imgUrl}" type="text"></td>
+            <td><input th:field="*{image}" type="file"></td>
         </tr>
         <tr>
             <td>Thông tin sản phẩm:</td>
