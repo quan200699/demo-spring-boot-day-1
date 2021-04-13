@@ -7,29 +7,40 @@
 <body>
 <h1>Tạo mới sản phẩm</h1>
 <a th:href="@{/products/list}">Danh sách sản phẩm</a>
-<form th:object="${product}" th:action="@{/products/create}" method="post" enctype="multipart/form-data">
-  <table>
-    <tr>
-      <td>Tên sản phẩm:</td>
-      <td><input type="text" th:field="*{name}"></td>
-    </tr>
-    <tr>
-      <td>Giá sản phẩm:</td>
-      <td><input type="text" th:field="*{price}"></td>
-    </tr>
-    <tr>
-      <td>Ảnh sản phẩm:</td>
-      <td><input type="file" th:field="*{image}"></td>
-    </tr>
-    <tr>
-      <td>Thông tin sản phẩm:</td>
-      <td><input type="text" th:field="*{description}"></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><button>Tạo mới</button></td>
-    </tr>
-  </table>
+<form enctype="multipart/form-data" method="post" th:action="@{/products/create}" th:object="${product}">
+    <table>
+        <tr>
+            <td>Tên sản phẩm:</td>
+            <td><input th:field="*{name}" type="text"></td>
+        </tr>
+        <tr>
+            <td>Giá sản phẩm:</td>
+            <td><input th:field="*{price}" type="text"></td>
+        </tr>
+        <tr>
+            <td>Ảnh sản phẩm:</td>
+            <td><input th:field="*{image}" type="file"></td>
+        </tr>
+        <tr>
+            <td>Thông tin sản phẩm:</td>
+            <td><input th:field="*{description}" type="text"></td>
+        </tr>
+        <tr>
+            <td>Danh mục sản phẩm:</td>
+            <td>
+                <select th:field="*{category}">
+                    <option th:each="category : ${categories}" th:text="${category.name}"
+                            th:value="${category.id}"></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button>Tạo mới</button>
+            </td>
+        </tr>
+    </table>
 </form>
 </body>
 </html>

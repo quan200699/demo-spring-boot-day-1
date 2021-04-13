@@ -18,4 +18,6 @@ public class ProductForm {
     private String description;
 
     private MultipartFile image;
+
+    private Category category;
 }

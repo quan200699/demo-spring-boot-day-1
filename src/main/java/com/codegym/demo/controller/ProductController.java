@@ -1,7 +1,9 @@
 package com.codegym.demo.controller;
 
+import com.codegym.demo.model.Category;
 import com.codegym.demo.model.Product;
 import com.codegym.demo.model.ProductForm;
+import com.codegym.demo.service.category.ICategoryService;
 import com.codegym.demo.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,9 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
+    @Autowired
+    private ICategoryService categoryService;
+
     @Value(value = "${upload.path}")
     private String fileUpload;
 
@@ -35,6 +40,8 @@ public class ProductController {
     @GetMapping("/create")
     public ModelAndView showFormCreate() {
         ModelAndView modelAndView = new ModelAndView("/product/create");
+        Iterable<Category> categories = categoryService.findAll();
+        modelAndView.addObject("categories", categories);
         modelAndView.addObject("product", new ProductForm());
         return modelAndView;
     }
@@ -53,6 +60,7 @@ public class ProductController {
         product.setPrice(productForm.getPrice());
         product.setDescription(productForm.getDescription());
         product.setImgUrl(fileName);
+        product.setCategory(productForm.getCategory());
         productService.save(product);
         ModelAndView modelAndView = new ModelAndView("/product/create");
         modelAndView.addObject("product", new ProductForm());
@@ -66,7 +74,9 @@ public class ProductController {
         if (productOptional.isPresent()) {
             modelAndView = new ModelAndView("/product/edit");
             Product product = productOptional.get();
-            ProductForm productForm = new ProductForm(product.getId(), product.getName(), product.getPrice(), product.getDescription(), null);
+            ProductForm productForm = new ProductForm(product.getId(), product.getName(), product.getPrice(), product.getDescription(), null, product.getCategory());
+            Iterable<Category> categories = categoryService.findAll();
+            modelAndView.addObject("categories", categories);
             modelAndView.addObject("product", productForm);
         } else {
             modelAndView = new ModelAndView("/error-404");
@@ -89,9 +99,10 @@ public class ProductController {
         product.setPrice(productForm.getPrice());
         product.setDescription(productForm.getDescription());
         product.setImgUrl(fileName);
+        product.setCategory(productForm.getCategory());
         productService.save(product);
         ModelAndView modelAndView = new ModelAndView("/product/edit");
-        modelAndView.addObject("product", new ProductForm());
+        modelAndView.addObject("product", productForm);
         return modelAndView;
     }
 
