@@ -12,10 +12,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -32,8 +35,14 @@ public class ProductController {
     @Value(value = "${upload.path}")
     private String fileUpload;
 
+    @ModelAttribute("categories")
+    public Iterable<Category> getAllCategory(){
+        Iterable<Category> categories = categoryService.findAll();
+        return categories;
+    }
+
     @GetMapping("/list")
-    public ModelAndView showAll(@RequestParam("q") Optional<String> name,@PageableDefault(size = 5) Pageable pageable) {
+    public ModelAndView showAll(@RequestParam("q") Optional<String> name, @PageableDefault(size = 5) Pageable pageable) {
         Page<Product> products;
         if (name.isPresent()) {
             String query = "%" + name.get() + "%";
@@ -49,14 +58,16 @@ public class ProductController {
     @GetMapping("/create")
     public ModelAndView showFormCreate() {
         ModelAndView modelAndView = new ModelAndView("/product/create");
-        Iterable<Category> categories = categoryService.findAll();
-        modelAndView.addObject("categories", categories);
         modelAndView.addObject("product", new ProductForm());
         return modelAndView;
     }
 
     @PostMapping("/create")
-    public ModelAndView createNewProduct(@ModelAttribute ProductForm productForm) {
+    //@Valid phải đi kèm với @ModelAttribute("product")
+    public ModelAndView createNewProduct(@Valid @ModelAttribute("product") ProductForm productForm, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ModelAndView("/product/create");
+        }
         Product product = new Product();
         MultipartFile multipartFile = productForm.getImage();
         String fileName = multipartFile.getOriginalFilename();
