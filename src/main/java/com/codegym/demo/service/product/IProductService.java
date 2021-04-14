@@ -5,4 +5,5 @@ import com.codegym.demo.service.IGeneralService;
 
 public interface IProductService extends IGeneralService<Product> {
     Iterable<Product> findAllByNameContaining(String name);
+    Iterable<Product> findAllProductByNameUsingQuery(String name);
 }

@@ -33,7 +33,8 @@ public class ProductController {
     public ModelAndView showAll(@RequestParam("q") Optional<String> name) {
         Iterable<Product> products;
         if(name.isPresent()){
-            products = productService.findAllByNameContaining(name.get());
+            String query = "%"+name.get()+"%";
+            products = productService.findAllProductByNameUsingQuery(query);
         }else {
             products = productService.findAll();
         }
