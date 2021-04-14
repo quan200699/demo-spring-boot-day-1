@@ -30,8 +30,13 @@ public class ProductController {
     private String fileUpload;
 
     @GetMapping("/list")
-    public ModelAndView showAll() {
-        Iterable<Product> products = productService.findAll();
+    public ModelAndView showAll(@RequestParam("q") Optional<String> name) {
+        Iterable<Product> products;
+        if(name.isPresent()){
+            products = productService.findAllByNameContaining(name.get());
+        }else {
+            products = productService.findAll();
+        }
         ModelAndView modelAndView = new ModelAndView("/product/list");
         modelAndView.addObject("products", products);
         return modelAndView;
