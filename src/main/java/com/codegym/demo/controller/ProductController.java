@@ -7,6 +7,9 @@ import com.codegym.demo.service.category.ICategoryService;
 import com.codegym.demo.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +33,13 @@ public class ProductController {
     private String fileUpload;
 
     @GetMapping("/list")
-    public ModelAndView showAll(@RequestParam("q") Optional<String> name) {
-        Iterable<Product> products;
-        if(name.isPresent()){
-            String query = "%"+name.get()+"%";
-            products = productService.findAllProductByNameUsingQuery(query);
-        }else {
-            products = productService.findAll();
+    public ModelAndView showAll(@RequestParam("q") Optional<String> name,@PageableDefault(size = 5) Pageable pageable) {
+        Page<Product> products;
+        if (name.isPresent()) {
+            String query = "%" + name.get() + "%";
+            products = productService.findAllProductByNameUsingQuery(query, pageable);
+        } else {
+            products = productService.findAll(pageable);
         }
         ModelAndView modelAndView = new ModelAndView("/product/list");
         modelAndView.addObject("products", products);
