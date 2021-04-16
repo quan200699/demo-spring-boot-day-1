@@ -13,7 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,7 +35,7 @@ public class ProductController {
     private String fileUpload;
 
     @ModelAttribute("categories")
-    public Iterable<Category> getAllCategory(){
+    public Iterable<Category> getAllCategory() {
         Iterable<Category> categories = categoryService.findAll();
         return categories;
     }
