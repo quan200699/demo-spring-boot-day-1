@@ -1,13 +1,12 @@
 package com.codegym.demo.controller;
 
+import com.codegym.demo.exception.NotFoundException;
 import com.codegym.demo.model.Category;
 import com.codegym.demo.service.category.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/categories")
@@ -39,16 +38,16 @@ public class CategoryController {
     }
 
     @GetMapping("/edit/{id}")
-    public ModelAndView showUpdateForm(@PathVariable Long id) {
-        Optional<Category> categoryOptional = categoryService.findById(id);
-        ModelAndView modelAndView;
-        if (categoryOptional.isPresent()) {
-            modelAndView = new ModelAndView("/category/edit");
-            modelAndView.addObject("category", categoryOptional.get());
-        } else {
-            modelAndView = new ModelAndView("/error-404");
-        }
+    public ModelAndView showUpdateForm(@PathVariable Long id) throws NotFoundException {
+        Category category = categoryService.findCategoryById(id);
+        ModelAndView modelAndView = new ModelAndView("/category/edit");
+        modelAndView.addObject("category", category);
         return modelAndView;
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView notFoundPage() {
+        return new ModelAndView("/error-404");
     }
 
     @PostMapping("/edit")
@@ -60,15 +59,10 @@ public class CategoryController {
     }
 
     @GetMapping("/delete/{id}")
-    public ModelAndView showDeleteForm(@PathVariable Long id) {
-        Optional<Category> categoryOptional = categoryService.findById(id);
-        ModelAndView modelAndView;
-        if (categoryOptional.isPresent()) {
-            modelAndView = new ModelAndView("/category/delete");
-            modelAndView.addObject("category", categoryOptional.get());
-        } else {
-            modelAndView = new ModelAndView("/error-404");
-        }
+    public ModelAndView showDeleteForm(@PathVariable Long id) throws NotFoundException {
+        Category category = categoryService.findCategoryById(id);
+        ModelAndView modelAndView = new ModelAndView("/category/delete");
+        modelAndView.addObject("category", category);
         return modelAndView;
     }
 
