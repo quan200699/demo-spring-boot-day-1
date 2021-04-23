@@ -3,16 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function createCategory() {
+            let name = document.getElementById("categoryName").value;
+            let category = {
+                name: name
+            };
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: '/categories',
+                type: 'POST',
+                data: JSON.stringify(category),
+                success: function (data) {
+                    console.log(data)
+                    $.ajax({
+                        url: '/categories',
+                        type: 'GET',
+                        success: function (categories) {
+                            let table = `<tbody>`
+                            for (let category of categories) {
+                                table += `<tr>
+                                <td>${category.name}</td>
+                                <td><a href="/categories/edit/${category.id}">Edit</a></td>
+                                <td><a href="/categories/delete/${category.id}">Delete</a></td>
+                                </tr>`
+                            }
+                            table += `</tbody>`;
+                            document.getElementById("tbody-category").innerHTML = table;
+                        }
+                    })
+                }
+            })
+        }
+    </script>
 </head>
 <body>
 <h1>Danh sách danh mục</h1>
 <a th:href="@{/categories/create}">Tạo mới danh mục</a>
+<form>
+    <table>
+        <tr>
+            <td>Tên danh mục:</td>
+            <td><input id="categoryName" type="text"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button onclick="createCategory()" type="button">Tạo mới</button>
+            </td>
+        </tr>
+    </table>
+</form>
 <table>
     <tr>
         <th>Tên danh mục</th>
         <th>Chỉnh sửa</th>
         <th>Xóa</th>
     </tr>
+    <tbody id="tbody-category">
     <th:block th:each="category: ${categories}">
         <tr>
             <td th:text="${category.name}"></td>
@@ -20,6 +72,7 @@
             <td><a th:href="@{/categories/delete/__${category.id}__ }">Delete</a></td>
         </tr>
     </th:block>
+    </tbody>
 </table>
 </body>
 </html>
