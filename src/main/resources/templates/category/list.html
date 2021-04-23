@@ -39,6 +39,53 @@
                 }
             })
         }
+
+        function editCategory(id) {
+            $.ajax({
+                url: `/categories/${id}`,
+                type: 'GET',
+                success: function (category) {
+                    document.getElementById("categoryNameUpdate").value = category.name;
+                    document.getElementById("categoryId").value = category.id;
+                }
+            })
+        }
+
+        function updateCategory() {
+            let id = document.getElementById("categoryId").value;
+            let categoryNewName = document.getElementById("categoryNameUpdate").value;
+            let categoryNew = {
+                id: id,
+                name: categoryNewName
+            }
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: `/categories/${id}`,
+                data: JSON.stringify(categoryNew),
+                type: 'PUT',
+                success: function () {
+                    $.ajax({
+                        url: '/categories',
+                        type: 'GET',
+                        success: function (categories) {
+                            let table = `<tbody>`
+                            for (let category of categories) {
+                                table += `<tr>
+                                <td>${category.name}</td>
+                                <td><a href="/categories/edit/${category.id}">Edit</a></td>
+                                <td><a href="/categories/delete/${category.id}">Delete</a></td>
+                                </tr>`
+                            }
+                            table += `</tbody>`;
+                            document.getElementById("tbody-category").innerHTML = table;
+                        }
+                    })
+                }
+            })
+        }
     </script>
 </head>
 <body>
@@ -58,6 +105,23 @@
         </tr>
     </table>
 </form>
+<form>
+    <table>
+        <tr>
+            <input id="categoryId" type="hidden">
+        </tr>
+        <tr>
+            <td>Tên danh mục:</td>
+            <td><input id="categoryNameUpdate" type="text"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button onclick="updateCategory()" type="button">Cập nhật</button>
+            </td>
+        </tr>
+    </table>
+</form>
 <table>
     <tr>
         <th>Tên danh mục</th>
@@ -68,7 +132,10 @@
     <th:block th:each="category: ${categories}">
         <tr>
             <td th:text="${category.name}"></td>
-            <td><a th:href="@{/categories/edit/__${category.id}__ }">Edit</a></td>
+            <!--            <td><a th:href="@{/categories/edit/__${category.id}__ }">Edit</a></td>-->
+            <td>
+                <button onclick="editCategory(this.id)" th:id="${category.id}">Edit</button>
+            </td>
             <td><a th:href="@{/categories/delete/__${category.id}__ }">Delete</a></td>
         </tr>
     </th:block>
